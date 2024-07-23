@@ -56,7 +56,7 @@ export default function LoadData() {
         )}
       </div>
 
-      <div className="ms-1 col-3 ">
+      {/* <div className="ms-1 col-3 ">
         <Link to={"/AddPatient"}>
           <div
             className="btn btn-primary mb-3 mt-5 align-self-center text-uppercase text-center d-flex justify-content-center align-items-center"
@@ -65,7 +65,7 @@ export default function LoadData() {
             + add Patient
           </div>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
