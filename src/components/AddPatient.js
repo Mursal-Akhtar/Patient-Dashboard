@@ -48,16 +48,25 @@ export default function AddPatient() {
       [id]: value,
     });
   };
+  const tkn = localStorage.getItem("jwtToken");
   const headers = {
     "Content-Type": "application/json;charset=UTF-8",
     "Access-Control-Allow-Origin": "*",
+    jwt_token: tkn,
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/save", formData, {
-        headers: headers,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/api/form/save",
+        formData,
+        {
+          headers: headers,
+        }
+      );
+      if (res.status >= 400 || res.status < 500) {
+        alert("There seems to be an error please try again");
+      }
     } catch (error) {
       console.log(error);
     }

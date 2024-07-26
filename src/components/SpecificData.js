@@ -27,7 +27,7 @@ export default function SpecificData() {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/getone/${patientId}`
+        `http://localhost:5000/api/form/getone/${patientId}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok.");
@@ -49,7 +49,7 @@ export default function SpecificData() {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  });
 
   const handleChange = (event) => {
     // console.log(event.target, "===");
@@ -59,16 +59,18 @@ export default function SpecificData() {
       [id]: value,
     });
   };
+  const tkn = localStorage.getItem("jwtToken");
 
   const headers = {
     "Content-Type": "application/json;charset=UTF-8",
     "Access-Control-Allow-Origin": "*",
+    jwt_token: tkn,
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/update/${patientId}`,
+        `http://localhost:5000/api/form/update/${patientId}`,
         d,
         {
           headers: headers,
@@ -76,7 +78,7 @@ export default function SpecificData() {
       );
 
       if (res.status === 200) {
-        navigate("/");
+        navigate("/user");
       } else if (res.status >= 400 || res.status < 500) {
         alert("There seems to be an error please try again");
       } else {

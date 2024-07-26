@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -5,14 +6,23 @@ export default function LoadData() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const tkn = localStorage.getItem("jwtToken");
+
+  const headers = {
+    "Content-Type": "application/json;charset=UTF-8",
+    "Access-Control-Allow-Origin": "*",
+    jwt_token: tkn,
+  };
+
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/getall"); // Replace with your API endpoint
-      if (!response.ok) {
-        throw new Error("Network response was not ok.");
-      }
-      const data = await response.json();
-      setData(data.forms);
+      const response = await axios.get(
+        "http://localhost:5000/api/form/getall",
+        {
+          headers,
+        }
+      );
+      setData(response.data.forms);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -38,7 +48,7 @@ export default function LoadData() {
                 className="list-group-item list-group-item-action m-2 rounded-2"
                 aria-current="true"
                 key={item.id}
-                to={`/PatientData?patientId=${item._id}`}
+                to={`/user/PatientData?patientId=${item._id}`}
               >
                 <div key={index}>
                   <div className=" w-100 justify-content-between mb-3 pb-2">
@@ -55,17 +65,6 @@ export default function LoadData() {
           </div>
         )}
       </div>
-
-      {/* <div className="ms-1 col-3 ">
-        <Link to={"/AddPatient"}>
-          <div
-            className="btn btn-primary mb-3 mt-5 align-self-center text-uppercase text-center d-flex justify-content-center align-items-center"
-            style={{ width: 150, height: 50 }}
-          >
-            + add Patient
-          </div>
-        </Link>
-      </div> */}
     </div>
   );
 }

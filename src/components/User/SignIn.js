@@ -14,6 +14,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../features/userSlice/userSlice";
 
 function Copyright(props) {
   return (
@@ -24,7 +26,7 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="/">
+      <Link color="inherit" href="/user">
         Your Website
       </Link>{" "}
       {new Date().getFullYear()}
@@ -38,24 +40,26 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  ///check token if exists navigate to dashboard
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = React.useState({
     email: "",
     password: "",
-    rememberme: "",
+    rememberme: false,
   });
 
   const handleChange = (event) => {
     const { value, name, checked } = event.target;
-    console.log(checked, "===");
+    // console.log(checked, "===");
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: name === "rememberme" ? checked : value,
     });
   };
 
   const handleSubmit = async (event) => {
-    const data = new FormData(event.currentTarget);
     const headers = {
       "Content-Type": "application/json;charset=UTF-8",
       "Access-Control-Allow-Origin": "*",
@@ -63,14 +67,17 @@ export default function SignIn() {
     event.preventDefault();
     try {
       const res = await axios.post(
-        `http://localhost:5000/user/signin`,
+        `http://localhost:5000/api/user/signin`,
         formData,
         {
           headers: headers,
         }
       );
       if (res.status >= 200 || res.status < 300) {
-        navigate("/");
+        const token = res.data.usr.token;
+        localStorage.setItem("jwtToken", token);
+        dispatch(addUser(res.data));
+        navigate("/user");
       } else if (res.status >= 400 || res.status < 500) {
         alert("There seems to be an error please try again");
       } else {
@@ -148,7 +155,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/dashboard" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

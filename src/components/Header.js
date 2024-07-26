@@ -11,11 +11,12 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -33,7 +34,7 @@ export default function Header() {
         }}
       >
         <NavLink
-          to={"/all"}
+          to={"/user/all"}
           className={({ isActive }) =>
             `block py-2 pr-4 pl-3 duration-200 ${
               isActive ? "text-orange-700" : "text-gray-700"
@@ -45,7 +46,7 @@ export default function Header() {
           </Typography>
         </NavLink>
         <NavLink
-          to={"/AddPatient"}
+          to={"/user/AddPatient"}
           className={({ isActive }) =>
             `block py-2 pr-4 pl-3 duration-200 ${
               isActive ? "text-orange-700" : "text-gray-700"
@@ -56,6 +57,17 @@ export default function Header() {
             Add Patient
           </Typography>
         </NavLink>
+
+        <button
+          onClick={() => {
+            localStorage.removeItem("jwtToken");
+            navigate("/");
+            alert("Logged out sucessfully");
+          }}
+        >
+          {" "}
+          Logout
+        </button>
 
         <Tooltip title="Account settings">
           <IconButton

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -37,6 +37,10 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const token = localStorage.getItem("jwtToken");
+  if (token) {
+    navigate("/user");
+  }
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -60,7 +64,7 @@ export default function SignUp() {
     event.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:5000/user/signup",
+        "http://localhost:5000/api/user/signup",
         formData,
         {
           headers: headers,
@@ -160,7 +164,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/signin" variant="body2">
+                <Link href="/" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
